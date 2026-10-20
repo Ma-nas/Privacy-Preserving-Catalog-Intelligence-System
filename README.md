@@ -1,65 +1,58 @@
-# Privacy-Preserving Catalog Intelligence System
+﻿# Privacy-Preserving Catalog Intelligence System
 
 <div align="center">
 
-[![Python](https://img.shields.io/badge/Python-3.11%2B%20%7C%203.14-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15%2B%20RLS-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Celery](https://img.shields.io/badge/Celery-5.3%2B-37814A?style=for-the-badge&logo=celery&logoColor=white)](https://docs.celeryq.dev/)
-[![Redis](https://img.shields.io/badge/Redis-7.0-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
-[![Docker](https://img.shields.io/badge/Docker-Compose%20v2-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Terraform](https://img.shields.io/badge/Terraform-GCP%20Cloud%20Run-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](https://www.terraform.io/)
-[![Security](https://img.shields.io/badge/Security-SOC%202%20Type%20II%20Compliant-success?style=for-the-badge&logo=shield)](https://github.com/Ma-nas/Privacy-Preserving-Catalog-Intelligence-System)
-[![Tests](https://img.shields.io/badge/Tests-Passing%20(100%25)-brightgreen?style=for-the-badge&logo=pytest)](https://github.com/Ma-nas/Privacy-Preserving-Catalog-Intelligence-System)
+[![Python](https://img.shields.io/badge/Python-3.11%2B%20%7C%203.14-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15%2B_RLS-4169E1?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Celery](https://img.shields.io/badge/Celery-5.3%2B-37814A?style=flat-square&logo=celery&logoColor=white)](https://docs.celeryq.dev/)
+[![Redis](https://img.shields.io/badge/Redis-7.0-DC382D?style=flat-square&logo=redis&logoColor=white)](https://redis.io/)
+[![Docker](https://img.shields.io/badge/Docker-Compose_v2-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Terraform](https://img.shields.io/badge/Terraform-GCP_Cloud_Run-7B42BC?style=flat-square&logo=terraform&logoColor=white)](https://www.terraform.io/)
+[![Security](https://img.shields.io/badge/Security-SOC_2_Type_II_Compliant-success?style=flat-square)](https://github.com/Ma-nas/Privacy-Preserving-Catalog-Intelligence-System)
+[![Tests](https://img.shields.io/badge/Tests-Passing_100%25-brightgreen?style=flat-square&logo=pytest&logoColor=white)](https://github.com/Ma-nas/Privacy-Preserving-Catalog-Intelligence-System)
 
 **Enterprise Multi-Tenant Catalog Enrichment, Classification, and Intelligence Platform with Database-Enforced Row-Level Security (RLS)**
 
-[Architecture](#-architecture-overview) • [Security Guarantees](#-security-guarantees--mathematical-proof) • [Quick Start](#-quick-start) • [API Reference](#-api-specification) • [Testing](#-testing-strategy--verification) • [Infrastructure](#-infrastructure-as-code-gcp-terraform) • [Operations Runbook](#-operational-runbook)
+[Architecture](#architecture-overview) | [Security Guarantees](#security-guarantees--mathematical-proof) | [Quick Start](#quick-start) | [API Specification](#api-specification) | [Testing Strategy](#testing-strategy--verification) | [Infrastructure](#infrastructure-as-code-gcp-terraform) | [Runbook](#operational-runbook)
 
 </div>
 
 ---
 
-## 📌 Executive Summary & Problem Statement
+## Executive Summary & Problem Statement
 
-Multi-tenant marketplaces, e-commerce aggregators, and B2B procurement portals need to classify, enrich, and generate intelligence from raw product catalogs across hundreds of distinct corporate tenants. 
+Multi-tenant marketplaces, e-commerce aggregators, and B2B procurement portals need to classify, enrich, and extract intelligence from raw product catalogs across hundreds of distinct corporate tenants without compromising confidential data.
 
 ### The Industry Vulnerability
 Traditional multi-tenant architectures adopt one of two flawed extremes:
-1. **Silo-Per-Tenant Infrastructure**: Architecturally secure, but introduces crippling cloud infrastructure costs, massive idle resource waste, and impossible operational management overhead at scale.
-2. **Shared Tables with Application Filtering**: Cost-efficient, but vulnerable to catastrophic cross-tenant data breaches caused by a single omitted `WHERE tenant_id = ...` predicate or developer oversight in any microservice query.
+1. **Silo-Per-Tenant Infrastructure**: Architecturally secure, but introduces crippling cloud infrastructure costs, massive idle resource waste, and unsustainable operational management overhead at scale.
+2. **Shared Tables with Application-Layer Filtering**: Cost-efficient, but vulnerable to catastrophic cross-tenant data breaches caused by a single omitted `WHERE tenant_id = ...` predicate or developer oversight in any microservice query.
 
 ### The Non-Negotiable Solution
 The **Privacy-Preserving Catalog Intelligence System** guarantees **zero cross-tenant data leakage** by delegating isolation boundary enforcement directly to the **PostgreSQL Database Engine kernel using Row-Level Security (RLS)**. Even if application-layer code executes `SELECT * FROM catalog_items;`, the database kernel strictly refuses to return rows outside the current transaction's tenant context.
 
 ---
 
-## 🏛️ System Status Dashboard
+## System Status Dashboard
 
 | Subsystem | Technology Stack | Runtime Environment | Boundary Enforcement | Status |
 | :--- | :--- | :--- | :--- | :---: |
-| **API Gateway** | FastAPI / Python 3.11+ | GCP Cloud Run / Uvicorn | Cryptographic JWT + Route Cross-Check | `Production-Ready` |
-| **Data Layer** | PostgreSQL 15+ (Cloud SQL) | Private VPC / Encrypted SSL | Database Engine Forced RLS | `Production-Ready` |
-| **Broker & State** | Redis 7.0 | GCP Memorystore | Logical DB Partitioning (DB 0 / DB 1) | `Production-Ready` |
-| **Async Worker Fleet** | Celery 5.3+ | Cloud Run Jobs / Kubernetes | Explicit Function Parameter Signatures | `Production-Ready` |
-| **ML Classifier** | Scikit-learn (TF-IDF + NB/SGD) | GCP Cloud Run (Stateless) | Ephemeral Invocations, No Shared Cache | `Production-Ready` |
-| **ML Synthesizer** | Stateless NLP Engine | GCP Cloud Run (Stateless) | Isolated Context, No Cross-Tenant Memory | `Production-Ready` |
-| **Audit Engine** | Append-Only Audit Stream | Dedicated PostgreSQL Role | Scoped App Role vs Auditor Role | `Production-Ready` |
+| **API Gateway** | FastAPI / Python 3.11+ | GCP Cloud Run / Uvicorn | Cryptographic JWT + Route Cross-Check | Production-Ready |
+| **Data Layer** | PostgreSQL 15+ (Cloud SQL) | Private VPC / Encrypted SSL | Database Engine Forced RLS | Production-Ready |
+| **Broker & State** | Redis 7.0 | GCP Memorystore | Logical DB Partitioning (DB 0 / DB 1) | Production-Ready |
+| **Async Worker Fleet** | Celery 5.3+ | Cloud Run Jobs / Kubernetes | Explicit Function Parameter Signatures | Production-Ready |
+| **ML Classifier** | Scikit-learn (TF-IDF + NB/SGD) | GCP Cloud Run (Stateless) | Ephemeral Invocations, No Shared Cache | Production-Ready |
+| **ML Synthesizer** | Stateless NLP Engine | GCP Cloud Run (Stateless) | Isolated Context, No Cross-Tenant Memory | Production-Ready |
+| **Audit Engine** | Append-Only Audit Stream | Dedicated PostgreSQL Role | Scoped App Role vs Auditor Role | Production-Ready |
 
 ---
 
-## 🔒 Security Guarantees & Mathematical Proof
+## Security Guarantees & Mathematical Proof
 
 ### 1. Fail-Closed 3-Valued Logic (3VL)
-PostgreSQL RLS policies evaluate against a session-level configuration variable:
-
-```sql
-CREATE POLICY tenant_isolation_select ON catalog_items
-  FOR SELECT USING (tenant_id = current_setting('app.tenant_id', true)::uuid);
-```
-
 - When context is declared, `current_setting('app.tenant_id', true)` returns the current tenant's UUID.
-- If an application defect, bug, or developer query forgets to initialize the context, `current_setting('app.tenant_id', true)` returns `NULL`.
+- If an application defect, bug, or developer query omits initializing the context, `current_setting('app.tenant_id', true)` returns `NULL`.
 - Under the SQL-92 Three-Valued Logic (3VL) standard:
   $$\text{tenant\_id} = \text{NULL} \implies \text{UNKNOWN (Falsy)}$$
 - **Result:** An unauthenticated query or an uninitialized session sees **exactly zero rows**, eliminating data leakage by default.
@@ -84,7 +77,7 @@ When Tenant B adversarially queries Tenant A's `item_id`:
 
 ---
 
-## 📐 Architecture Overview
+## Architecture Overview
 
 ```mermaid
 flowchart TD
@@ -136,11 +129,11 @@ flowchart TD
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
-### Option 1: 1-Click Containerized Stack (Recommended)
+### Option 1: Containerized Stack (Recommended)
 
-Run the entire ecosystem—PostgreSQL 15 with pre-configured RLS roles, Redis 7, FastAPI Gateway, Celery worker fleet, and both ML microservices—in Docker:
+Run PostgreSQL 15 with pre-configured RLS roles, Redis 7, FastAPI Gateway, Celery worker fleet, and both ML microservices in Docker:
 
 ```bash
 # Clone the repository
@@ -152,11 +145,11 @@ docker compose up --build
 ```
 
 **Service Endpoints:**
-- 📘 **API Gateway & Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- 🤖 **ML Classification Health**: [http://localhost:8001/health](http://localhost:8001/health)
-- 📝 **ML Description Health**: [http://localhost:8002/health](http://localhost:8002/health)
-- 🗄️ **PostgreSQL Database**: `localhost:5432` (`catalog_db`)
-- ⚡ **Redis Task Broker**: `localhost:6379`
+- API Gateway & Swagger UI: `http://localhost:8000/docs`
+- ML Classification Health: `http://localhost:8001/health`
+- ML Description Health: `http://localhost:8002/health`
+- PostgreSQL Database: `localhost:5432` (`catalog_db`)
+- Redis Task Broker: `localhost:6379`
 
 ---
 
@@ -175,7 +168,6 @@ pip install -r requirements.txt
 Ensure no raw SQL interpolations or unscoped sessions exist:
 ```bash
 python scripts/lint_db_access.py
-# [SUCCESS] All application code adheres to Rule §6.1. DB access strictly scoped via db/session.py.
 ```
 
 #### 3. Run Automated Tests
@@ -191,7 +183,7 @@ python scripts/seed_data.py
 
 ---
 
-## 🚀 API Specification
+## API Specification
 
 ### Catalog Ingestion & Management
 
@@ -214,7 +206,7 @@ python scripts/seed_data.py
 
 ---
 
-### 💻 cURL Usage Examples
+### cURL Usage Examples
 
 #### 1. Generate a Tenant JWT Token
 ```bash
@@ -251,11 +243,9 @@ curl -X GET "http://localhost:8000/v1/catalogs/a0000000-0000-0000-0000-000000000
 
 ---
 
-## 🧪 Testing Strategy & Verification
+## Testing Strategy & Verification
 
-The system follows a strict 4-tier testing hierarchy:
-
-```
+```text
                   /\
                  /  \      Adversarial E2E Tests (tests/e2e)
                 /    \     [Cross-tenant spoofing, 404 leakage checks]
@@ -285,7 +275,7 @@ python -m pytest tests/integration -v
 
 ---
 
-## ☁️ Infrastructure as Code (GCP Terraform)
+## Infrastructure as Code (GCP Terraform)
 
 Production infrastructure assets are maintained under [`infra/`](infra/):
 
@@ -294,7 +284,6 @@ Production infrastructure assets are maintained under [`infra/`](infra/):
 - **Serverless VPC Access**: VPC connector bridging Cloud Run services to Cloud SQL and Memorystore.
 - **Cloud Run Microservices**: Auto-scaling container services with scale-to-zero semantics for ML services and min-instances for API Gateway.
 
-To plan and apply infrastructure:
 ```bash
 cd infra
 terraform init
@@ -304,7 +293,7 @@ terraform apply tfplan
 
 ---
 
-## 🚨 Operational Runbook
+## Operational Runbook
 
 | Incident | Detection Vector | Root Cause | Remediation Protocol |
 | :--- | :--- | :--- | :--- |
@@ -315,68 +304,68 @@ terraform apply tfplan
 
 ---
 
-## 📂 Repository File Tree
+## Repository Structure
 
-```
+```text
 .
-├── Dockerfile.api                  # Container image for FastAPI API Gateway
-├── Dockerfile.celery               # Container image for Celery task workers
-├── Dockerfile.ml_classification    # Container image for Scikit-learn Classifier
-├── Dockerfile.ml_description       # Container image for NLP Synthesizer
-├── README.md                       # Comprehensive system documentation
-├── alembic.ini                     # Database migration configuration
-├── config.py                       # Central Pydantic application settings
-├── docker-compose.yml              # Multi-container local development stack
-├── requirements.txt                # Production & test Python dependencies
-├── api/
-│   ├── auth.py                     # JWT issuance, principal validation, route cross-checks
-│   ├── main.py                     # FastAPI application setup & lifespan events
-│   ├── schemas.py                  # Pydantic v2 request/response serialization schemas
-│   └── routers/
-│       ├── audit.py                # Tenant and cross-tenant auditor endpoints
-│       ├── auth.py                 # Token generation endpoints for testing
-│       └── catalogs.py             # Batch ingestion, items, recommendations
-├── db/
-│   ├── engine.py                   # SQLAlchemy connection pools & role engines
-│   ├── models.py                   # Declarative SQL models (Tenant, CatalogItem, etc.)
-│   ├── session.py                  # tenant_scoped_session() & auditor_scoped_session()
-│   └── migrations/
-│       └── versions/
-│           └── 0001_initial_schema_and_rls.py  # DDL with forced RLS policies
-├── docker/
-│   └── init.sql                    # Initial PostgreSQL roles & pgcrypto extension
-├── infra/
-│   ├── main.tf                     # GCP Cloud SQL, Memorystore, Cloud Run, VPC connector
-│   ├── outputs.tf                  # Infrastructure endpoints and connection outputs
-│   └── variables.tf                # Configuration variables for GCP deployment
-├── ml_services/
-│   ├── classification/             # TF-IDF + Naive Bayes / SGD classifier microservice
-│   └── description/                # Keyword extraction & marketing copy synthesizer
-├── scripts/
-│   ├── lint_db_access.py           # Architecture Rule §6.1 static verification linter
-│   └── seed_data.py                # Synthetic tenant and catalog seeder script
-├── services/
-│   ├── classifier_client.py        # Resilient HTTP client for classification
-│   └── description_client.py       # Resilient HTTP client for description generation
-├── tasks/
-│   ├── celery_app.py               # Celery app configuration & queue routing
-│   └── enrichment.py               # Asynchronous catalog enrichment workflow
-└── tests/
-    ├── conftest.py                 # Pytest fixtures and live DB availability detection
-    ├── e2e/
-    │   └── test_adversarial_isolation.py  # 404 leakage & route spoofing tests
-    ├── integration/
-    │   └── test_rls_fail_closed.py        # Real PostgreSQL kernel RLS tests
-    └── unit/
-        ├── test_auth.py            # JWT token & permission unit tests
-        ├── test_db_session.py      # Session context & injection prevention tests
-        ├── test_ml_services.py     # ML vectorizer & synthesizer unit tests
-        └── test_schemas.py         # Pydantic schema validation tests
+|-- Dockerfile.api                  # Container image for FastAPI API Gateway
+|-- Dockerfile.celery               # Container image for Celery task workers
+|-- Dockerfile.ml_classification    # Container image for Scikit-learn Classifier
+|-- Dockerfile.ml_description       # Container image for NLP Synthesizer
+|-- README.md                       # Comprehensive system documentation
+|-- alembic.ini                     # Database migration configuration
+|-- config.py                       # Central Pydantic application settings
+|-- docker-compose.yml              # Multi-container local development stack
+|-- requirements.txt                # Production & test Python dependencies
+|-- api/
+|   |-- auth.py                     # JWT issuance, principal validation, route cross-checks
+|   |-- main.py                     # FastAPI application setup & lifespan events
+|   |-- schemas.py                  # Pydantic v2 request/response serialization schemas
+|   +-- routers/
+|       |-- audit.py                # Tenant and cross-tenant auditor endpoints
+|       |-- auth.py                 # Token generation endpoints for testing
+|       +-- catalogs.py             # Batch ingestion, items, recommendations
+|-- db/
+|   |-- engine.py                   # SQLAlchemy connection pools & role engines
+|   |-- models.py                   # Declarative SQL models (Tenant, CatalogItem, etc.)
+|   |-- session.py                  # tenant_scoped_session() & auditor_scoped_session()
+|   +-- migrations/
+|       +-- versions/
+|           +-- 0001_initial_schema_and_rls.py  # DDL with forced RLS policies
+|-- docker/
+|   +-- init.sql                    # Initial PostgreSQL roles & pgcrypto extension
+|-- infra/
+|   |-- main.tf                     # GCP Cloud SQL, Memorystore, Cloud Run, VPC connector
+|   |-- outputs.tf                  # Infrastructure endpoints and connection outputs
+|   +-- variables.tf                # Configuration variables for GCP deployment
+|-- ml_services/
+|   |-- classification/             # TF-IDF + Naive Bayes / SGD classifier microservice
+|   +-- description/                # Keyword extraction & marketing copy synthesizer
+|-- scripts/
+|   |-- lint_db_access.py           # Architecture Rule A 6.1 static verification linter
+|   +-- seed_data.py                # Synthetic tenant and catalog seeder script
+|-- services/
+|   |-- classifier_client.py        # Resilient HTTP client for classification
+|   +-- description_client.py       # Resilient HTTP client for description generation
+|-- tasks/
+|   |-- celery_app.py               # Celery app configuration & queue routing
+|   +-- enrichment.py               # Asynchronous catalog enrichment workflow
++-- tests/
+    |-- conftest.py                 # Pytest fixtures and live DB availability detection
+    |-- e2e/
+    |   +-- test_adversarial_isolation.py  # 404 leakage & route spoofing tests
+    |-- integration/
+    |   +-- test_rls_fail_closed.py        # Real PostgreSQL kernel RLS tests
+    +-- unit/
+        |-- test_auth.py            # JWT token & permission unit tests
+        |-- test_db_session.py      # Session context & injection prevention tests
+        |-- test_ml_services.py     # ML vectorizer & synthesizer unit tests
+        +-- test_schemas.py         # Pydantic schema validation tests
 ```
 
 ---
 
-## 📄 License & Compliance
+## License & Compliance
 
 Distributed under the **MIT License**.
 
